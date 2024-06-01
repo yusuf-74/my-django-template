@@ -162,21 +162,21 @@ def main():
         no_pre_commit()
         print(f"{SUCCESS}Removed .pre-commit-config.yaml file")
 
-    # for item in os.listdir():
-    #     try:
-    #         shutil.move(f"{item}", f"../{item}")
-    #     except Exception:
-    #         pass
-    # for item in os.listdir("{{ cookiecutter.project_slug }}"):
-    #     try:
-    #         shutil.move(
-    #             f"{{ cookiecutter.project_slug }}/{item}",
-    #             f"{item}",
-    #         )
-    #     except Exception:
-    #         pass
-    # print(f"{SUCCESS}Moved files to the root directory")
-    # shutil.rmtree("{{ cookiecutter.project_slug }}")
+    for item in os.listdir():
+        try:
+            shutil.move(f"{item}", f"../{item}")
+        except Exception:
+            pass
+    for item in os.listdir("{{ cookiecutter.project_slug }}"):
+        try:
+            shutil.move(
+                f"{{ cookiecutter.project_slug }}/{item}",
+                f"{item}",
+            )
+        except Exception:
+            pass
+    print(f"{SUCCESS}Moved files to the root directory")
+    shutil.rmtree("{{ cookiecutter.project_slug }}")
 
 
 if __name__ == "__main__":
