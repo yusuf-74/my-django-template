@@ -6,5 +6,6 @@
     "use_docker": "y",
     "use_celery": "y",
     "use_bitbucket_pipelines": "y",
-    "use_pre_commit": "y"
+    "use_pre_commit": "y",
+    "use_nginx": "y"
 }
