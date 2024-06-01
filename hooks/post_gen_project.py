@@ -77,7 +77,7 @@ def no_celery():
         )
         env_example_files = []
     for env_example_file in env_example_files:
-        with open(env_example_file, "r+") as f:
+        with open("env_files/" + env_example_file, "r+") as f:
             lines = f.readlines()
             f.seek(0)
             for line in lines:
