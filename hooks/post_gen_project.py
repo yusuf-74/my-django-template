@@ -173,8 +173,10 @@ def main():
 
     # rename the project folder to dummy and move all its contents to the root of the project
 
+    print("parent directory: ", os.getcwd())
+
     for item in os.listdir():
-        shutil.move(f"../{item}", f"{item}")
+        shutil.move(f"{item}", f"../{item}")
 
 
 if __name__ == "__main__":
