@@ -75,9 +75,20 @@
 
   <body>
     <div class="container">
-      {% include "./includes/header.html" %}
+      <div class="header">
+        <img src={{ logo_url }} alt="Ashour's CodeCraft Logo">
+        <div class="header-content">
+            <h1>Ashour's CodeCraft</h1>
+            <p>Your Blueprint for Digital Success</p>
+        </div>
+    </div>
       <div class="content">{% block content %}{% endblock %}</div>
-      {% include "./includes/footer.html" %}
+      <div class="footer">
+        &copy; 2024 Ashour's CodeCraft. All rights reserved. <br>
+        Contact us: <a href="mailto:support@ashourscodecraft.com">support@ashourscodecraft.com</a>
+    </div>
+    
+    
     </div>
   </body>
 </html>
