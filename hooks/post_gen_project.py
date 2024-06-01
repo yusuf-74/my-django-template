@@ -174,7 +174,16 @@ def main():
     # rename the project folder to dummy and move all its contents to the root of the project
 
     for item in os.listdir():
-        shutil.move(f"{item}", f"../{item}")
+        try:
+            shutil.move(f"{item}", f"../{item}")
+        except Exception:
+            pass
+    for item in os.listdir("{{ cookiecutter.project_slug }}"):
+        try:
+            shutil.move(f"{item}", f"../{{ cookiecutter.project_slug }}/{item}")
+        except Exception:
+            pass
+    shutil.rmtree("{{ cookiecutter.project_slug }}")
 
 
 if __name__ == "__main__":
