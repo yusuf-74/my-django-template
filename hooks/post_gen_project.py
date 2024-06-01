@@ -44,6 +44,7 @@ def no_celery():
                     f.write(line)
             f.truncate()
     except FileNotFoundError:
+        print(f"{WARNING}No __init__.py file found. Skipping removing celery imports")
         pass
 
     # remove celery containers from docker-compose.[any].yml
@@ -59,8 +60,11 @@ def no_celery():
 
         with open(docker_compose_file, "w") as f:
             yaml.dump(docker_compose, f)
-
-    env_example_files = [f for f in os.listdir('env_files') if f.endswith(".env.example")]
+    try:
+        env_example_files = [f for f in os.listdir('env_files') if f.endswith(".env.example")]
+    except Exception:
+        print(f"{WARNING}No env_files folder found. Skipping removing celery environment variables")
+        env_example_files = []
     for env_example_file in env_example_files:
         with open(env_example_file, "r+") as f:
             lines = f.readlines()
