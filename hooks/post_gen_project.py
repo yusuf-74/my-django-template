@@ -113,13 +113,13 @@ def no_nginx():
 
 def no_bitbucket_pipeline():
     # Remove bitbucket-pipelines.yml file
-    os.remove("bitbucket-pipelines.yml")
+    os.remove("../bitbucket-pipelines.yml")
 
 
 def no_pre_commit():
     # Remove .pre-commit-config.yaml file
-    os.remove(".pre-commit-config.yaml")
-    os.remove(".flake8")
+    os.remove("../.pre-commit-config.yaml")
+    os.remove("../.flake8")
     try:
         # remove black and isort from pyproject.toml
         with open("pyproject.toml", "r+") as f:
