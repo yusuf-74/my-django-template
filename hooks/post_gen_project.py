@@ -103,13 +103,15 @@ def no_pre_commit():
     # Remove .pre-commit-config.yaml file
     shutil.rmtree(".pre-commit-config.yaml", ignore_errors=True)
     shutil.rmtree(".flake8", ignore_errors=True)
-
-    # remove black and isort from pyproject.toml
-    with open("pyproject.toml", "r+") as f:
-        pyproject = toml.load(f)
-        pyproject["tool"]["black"] = None
-        pyproject["tool"]["isort"] = None
-        toml.dump(pyproject, f)
+    try:
+        # remove black and isort from pyproject.toml
+        with open("pyproject.toml", "r+") as f:
+            pyproject = toml.load(f)
+            pyproject["tool"]["black"] = None
+            pyproject["tool"]["isort"] = None
+            toml.dump(pyproject, f)
+    except FileNotFoundError:
+        print(f"{WARNING}No pyproject.toml file found. Skipping removing black and isort")
 
 
 def main():
