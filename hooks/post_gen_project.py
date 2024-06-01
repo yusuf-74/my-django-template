@@ -173,10 +173,12 @@ def main():
 
     # rename the project folder to dummy and move all its contents to the root of the project
 
-    print("parent directory: ", os.getcwd())
+    os.chdir("..")
+    os.rename("{{cookiecutter.project_slug}}", "dummy")
 
-    for item in os.listdir():
+    for item in os.listdir("dummy"):
         shutil.move(f"{item}", f"../{item}")
+    shutil.rmtree("dummy")
 
 
 if __name__ == "__main__":
