@@ -172,7 +172,7 @@ def main():
     #     print(f"{SUCCESS}Moved .pre-commit-config.yaml file to the root of the project")
 
     # rename the project folder to dummy and move all its contents to the root of the project
-    shutil.move("./", "dummy")
+    shutil.move(".", "dummy")
     for item in os.listdir("dummy"):
         shutil.move(f"dummy/{item}", f"{item}")
     os.rmdir("dummy")
