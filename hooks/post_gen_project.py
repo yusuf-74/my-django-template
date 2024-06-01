@@ -25,13 +25,13 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 def no_docker():
     # Remove Dockerfile and docker-compose.[any].yml files
-    shutil.rmtree("Dockerfile", ignore_errors=True)
-    shutil.rmtree("docker-compose", ignore_errors=True)
+    shutil.rmtree("Dockerfile")
+    shutil.rmtree("docker-compose")
 
 
 def no_celery():
     # Remove celery.py file
-    shutil.rmtree("{{cookiecutter.project_slug}}/celery.py", ignore_errors=True)
+    shutil.rmtree("{{cookiecutter.project_slug}}/celery.py")
     try:
         with open("{{cookiecutter.project_slug}}/__init__.py", "w") as f:
             f.write("")
@@ -66,7 +66,7 @@ def no_celery():
                 new_services["services"][service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
-            yaml.dump(new_services, f)
+            yaml.safe_dump(new_services, f)
     try:
         env_example_files = [
             f for f in os.listdir("env_files") if f.endswith(".env.example")
@@ -88,7 +88,7 @@ def no_celery():
 
 def no_nginx():
     # Remove nginx folder
-    shutil.rmtree("nginx", ignore_errors=True)
+    shutil.rmtree("nginx")
 
     # Remove nginx container from docker-compose.[any].yml
     # grab the docker-compose files
@@ -104,18 +104,18 @@ def no_nginx():
                 new_services["services"][service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
-            yaml.dump(new_services, f)
+            yaml.safe_dump(new_services, f)
 
 
 def no_bitbucket_pipeline():
     # Remove bitbucket-pipelines.yml file
-    shutil.rmtree("bitbucket-pipelines.yml", ignore_errors=True)
+    shutil.rmtree("bitbucket-pipelines.yml")
 
 
 def no_pre_commit():
     # Remove .pre-commit-config.yaml file
-    shutil.rmtree(".pre-commit-config.yaml", ignore_errors=True)
-    shutil.rmtree(".flake8", ignore_errors=True)
+    shutil.rmtree(".pre-commit-config.yaml")
+    shutil.rmtree(".flake8")
     try:
         # remove black and isort from pyproject.toml
         with open("pyproject.toml", "r+") as f:
