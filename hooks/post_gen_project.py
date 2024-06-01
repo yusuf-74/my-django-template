@@ -173,11 +173,8 @@ def main():
 
     # rename the project folder to dummy and move all its contents to the root of the project
 
-    os.rename(".", "dummy")
-
-    for item in os.listdir("dummy"):
+    for item in os.listdir():
         shutil.move(f"{item}", f"../{item}")
-    shutil.rmtree("dummy")
 
 
 if __name__ == "__main__":
