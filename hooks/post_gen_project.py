@@ -180,11 +180,12 @@ def main():
             print(f"{TERMINATOR}Error: {e}")
             print(f"{WARNING}Failed to move {item} to the root of the project")
             pass
+    print(f"{SUCCESS}Moved all files to the root of the project =====")
     for item in os.listdir("{{ cookiecutter.project_slug }}"):
         try:
             shutil.move(f"{item}", f"../{{ cookiecutter.project_slug }}/{item}")
         except Exception as e:
-            print(e)
+            print(f"{TERMINATOR}Error: {e}")
             print(
                 f"{WARNING}Failed to move {item} to ../{{ cookiecutter.project_slug }}/{item}"
             )
