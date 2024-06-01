@@ -185,7 +185,7 @@ def main():
         try:
             shutil.move(
                 f"{{ cookiecutter.project_slug }}/{item}",
-                f"../{{ cookiecutter.project_slug }}/{item}",
+                f"{item}",
             )
         except Exception as e:
             print(f"{TERMINATOR}Error: {e}")
