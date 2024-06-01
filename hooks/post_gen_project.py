@@ -25,8 +25,12 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 def no_docker():
     # Remove Dockerfile and docker-compose.[any].yml files
-    shutil.rmtree("Dockerfile")
-    shutil.rmtree("docker-compose")
+    os.remove("Dockerfile")
+    docker_compose_files = [
+        f for f in os.listdir() if f.startswith("docker-compose") and f.endswith(".yml")
+    ]
+    for docker_compose_file in docker_compose_files:
+        os.remove(docker_compose_file)
 
 
 def no_celery():
@@ -109,7 +113,7 @@ def no_nginx():
 
 def no_bitbucket_pipeline():
     # Remove bitbucket-pipelines.yml file
-    shutil.rmtree("bitbucket-pipelines.yml")
+    os.remove("bitbucket-pipelines.yml")
 
 
 def no_pre_commit():
