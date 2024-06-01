@@ -176,7 +176,8 @@ def main():
     for item in os.listdir():
         try:
             shutil.move(f"{item}", f"../{item}")
-        except Exception:
+        except Exception as e:
+            print(f"{TERMINATOR}Error: {e}")
             print(f"{WARNING}Failed to move {item} to the root of the project")
             pass
     for item in os.listdir("{{ cookiecutter.project_slug }}"):
