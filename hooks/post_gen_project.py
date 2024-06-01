@@ -188,7 +188,7 @@ def main():
             print(f"{TERMINATOR}Error: {e}")
             print(f"{WARNING}Failed to move {item} to ../{item}")
             pass
-    shutil.rmtree("{{ cookiecutter.project_slug }}")
+    # shutil.rmtree("{{ cookiecutter.project_slug }}")
 
 
 if __name__ == "__main__":
