@@ -32,16 +32,19 @@ def no_docker():
 def no_celery():
     # Remove celery.py file
     shutil.rmtree("{{cookiecutter.project_slug}}/celery.py", ignore_errors=True)
-    with open("{{cookiecutter.project_slug}}/__init__.py", "w") as f:
-        f.write("")
+    try:
+        with open("{{cookiecutter.project_slug}}/__init__.py", "w") as f:
+            f.write("")
 
-    with open("{{cookiecutter.project_slug}}/settings.py", "r+") as f:
-        lines = f.readlines()
-        f.seek(0)
-        for line in lines:
-            if "celery" not in line.lower():
-                f.write(line)
-        f.truncate()
+        with open("{{cookiecutter.project_slug}}/settings.py", "r+") as f:
+            lines = f.readlines()
+            f.seek(0)
+            for line in lines:
+                if "celery" not in line.lower():
+                    f.write(line)
+            f.truncate()
+    except FileNotFoundError:
+        pass
 
     # remove celery containers from docker-compose.[any].yml
     # grab the docker-compose files
