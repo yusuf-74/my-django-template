@@ -55,7 +55,7 @@ def no_celery():
     for docker_compose_file in docker_compose_files:
         with open(docker_compose_file, "r") as f:
             docker_compose = yaml.safe_load(f)
-        new_services = {}
+        new_services = {"services": {}}
         for service in docker_compose["services"]:
             if (
                 "beat" not in service
@@ -63,7 +63,7 @@ def no_celery():
                 and "redis" not in service
                 and "flower" not in service
             ):
-                new_services[service] = docker_compose["services"][service]
+                new_services["services"][service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
             yaml.dump(new_services, f)
@@ -98,10 +98,10 @@ def no_nginx():
     for docker_compose_file in docker_compose_files:
         with open(docker_compose_file, "r") as f:
             docker_compose = yaml.safe_load(f)
-        new_services = {}
+        new_services = {"services": {}}
         for service in docker_compose["services"]:
             if "nginx" not in service:
-                new_services[service] = docker_compose["services"][service]
+                new_services["services"][service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
             yaml.dump(new_services, f)
