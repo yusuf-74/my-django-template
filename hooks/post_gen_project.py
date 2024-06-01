@@ -157,39 +157,25 @@ def main():
     if "{{cookiecutter.use_bitbucket_pipeline}}" == "n":
         no_bitbucket_pipeline()
         print(f"{SUCCESS}Removed bitbucket-pipelines.yml file")
-    # else :
-    #     with_bitbucket_pipeline()
-    #     print(f"{SUCCESS}Moved bitbucket-pipelines.yml file to the root of the project")
 
     if "{{cookiecutter.use_pre_commit}}" == "n":
         no_pre_commit()
         print(f"{SUCCESS}Removed .pre-commit-config.yaml file")
-    # else:
-    #     with_pre_commit()
-    #     print(f"{SUCCESS}Moved .pre-commit-config.yaml file to the root of the project")
-
-    # rename the project folder to dummy and move all its contents to the root of the project
 
     for item in os.listdir():
         try:
             shutil.move(f"{item}", f"../{item}")
-        except Exception as e:
-            print(f"{TERMINATOR}Error: {e}")
-            print(f"{WARNING}Failed to move {item} to the root of the project")
+        except Exception:
             pass
-    print(f"{SUCCESS}Moved all files to the root of the project =====")
     for item in os.listdir("{{ cookiecutter.project_slug }}"):
         try:
             shutil.move(
                 f"{{ cookiecutter.project_slug }}/{item}",
                 f"{item}",
             )
-        except Exception as e:
-            print(f"{TERMINATOR}Error: {e}")
-            print(
-                f"{WARNING}Failed to move {item} to {{ cookiecutter.project_slug }}/{item}"
-            )
+        except Exception:
             pass
+    print(f"{SUCCESS}Moved files to the root directory")
     shutil.rmtree("{{ cookiecutter.project_slug }}")
 
 
