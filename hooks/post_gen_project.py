@@ -49,21 +49,32 @@ def no_celery():
 
     # remove celery containers from docker-compose.[any].yml
     # grab the docker-compose files
-    docker_compose_files = [f for f in os.listdir() if f.startswith("docker-compose") and f.endswith(".yml")]
+    docker_compose_files = [
+        f for f in os.listdir() if f.startswith("docker-compose") and f.endswith(".yml")
+    ]
     for docker_compose_file in docker_compose_files:
         with open(docker_compose_file, "r") as f:
             docker_compose = yaml.safe_load(f)
-
+        new_services = {}
         for service in docker_compose["services"]:
-            if "beat" in service or "worker" in service or "redis" in service or "flower" in service:
-                del docker_compose["services"][service]
+            if (
+                "beat" not in service
+                and "worker" not in service
+                and "redis" not in service
+                and "flower" not in service
+            ):
+                new_services[service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
-            yaml.dump(docker_compose, f)
+            yaml.dump(new_services, f)
     try:
-        env_example_files = [f for f in os.listdir('env_files') if f.endswith(".env.example")]
+        env_example_files = [
+            f for f in os.listdir("env_files") if f.endswith(".env.example")
+        ]
     except Exception:
-        print(f"{WARNING}No env_files folder found. Skipping removing celery environment variables")
+        print(
+            f"{WARNING}No env_files folder found. Skipping removing celery environment variables"
+        )
         env_example_files = []
     for env_example_file in env_example_files:
         with open(env_example_file, "r+") as f:
@@ -81,17 +92,19 @@ def no_nginx():
 
     # Remove nginx container from docker-compose.[any].yml
     # grab the docker-compose files
-    docker_compose_files = [f for f in os.listdir() if f.startswith("docker-compose") and f.endswith(".yml")]
+    docker_compose_files = [
+        f for f in os.listdir() if f.startswith("docker-compose") and f.endswith(".yml")
+    ]
     for docker_compose_file in docker_compose_files:
         with open(docker_compose_file, "r") as f:
             docker_compose = yaml.safe_load(f)
-
+        new_services = {}
         for service in docker_compose["services"]:
-            if "nginx" in service:
-                del docker_compose["services"][service]
+            if "nginx" not in service:
+                new_services[service] = docker_compose["services"][service]
 
         with open(docker_compose_file, "w") as f:
-            yaml.dump(docker_compose, f)
+            yaml.dump(new_services, f)
 
 
 def no_bitbucket_pipeline():
@@ -111,7 +124,9 @@ def no_pre_commit():
             pyproject["tool"]["isort"] = None
             toml.dump(pyproject, f)
     except FileNotFoundError:
-        print(f"{WARNING}No pyproject.toml file found. Skipping removing black and isort")
+        print(
+            f"{WARNING}No pyproject.toml file found. Skipping removing black and isort"
+        )
 
 
 def main():
