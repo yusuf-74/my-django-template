@@ -177,11 +177,13 @@ def main():
         try:
             shutil.move(f"{item}", f"../{item}")
         except Exception:
+            print(f"{WARNING}Failed to move {item} to the root of the project")
             pass
     for item in os.listdir("{{ cookiecutter.project_slug }}"):
         try:
             shutil.move(f"{item}", f"../{{ cookiecutter.project_slug }}/{item}")
         except Exception:
+            print(f"{WARNING}Failed to move {item} to the root of the project")
             pass
     shutil.rmtree("{{ cookiecutter.project_slug }}")
 
