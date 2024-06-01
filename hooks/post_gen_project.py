@@ -116,11 +116,6 @@ def no_bitbucket_pipeline():
     os.remove("bitbucket-pipelines.yml")
 
 
-def with_bitbucket_pipeline():
-    # move bitbucket-pipelines.yml file to the root of the project
-    shutil.move("bitbucket-pipelines.yml", "../bitbucket-pipelines.yml")
-
-
 def no_pre_commit():
     # Remove .pre-commit-config.yaml file
     os.remove(".pre-commit-config.yaml")
@@ -131,17 +126,13 @@ def no_pre_commit():
             pyproject = toml.load(f)
             pyproject["tool"]["black"] = None
             pyproject["tool"]["isort"] = None
+            f.seek(0)
             toml.dump(pyproject, f)
+            f.truncate()
     except FileNotFoundError:
         print(
             f"{WARNING}No pyproject.toml file found. Skipping removing black and isort"
         )
-
-
-def with_pre_commit():
-    # move .pre-commit-config.yaml file to the root of the project
-    shutil.move(".pre-commit-config.yaml", "../.pre-commit-config.yaml")
-    shutil.move(".flake8", "../.flake8")
 
 
 def main():
