@@ -113,13 +113,18 @@ def no_nginx():
 
 def no_bitbucket_pipeline():
     # Remove bitbucket-pipelines.yml file
-    os.remove("../bitbucket-pipelines.yml")
+    os.remove("bitbucket-pipelines.yml")
+
+
+def with_bitbucket_pipeline():
+    # move bitbucket-pipelines.yml file to the root of the project
+    shutil.move("bitbucket-pipelines.yml", "../bitbucket-pipelines.yml")
 
 
 def no_pre_commit():
     # Remove .pre-commit-config.yaml file
-    os.remove("../.pre-commit-config.yaml")
-    os.remove("../.flake8")
+    os.remove(".pre-commit-config.yaml")
+    os.remove(".flake8")
     try:
         # remove black and isort from pyproject.toml
         with open("pyproject.toml", "r+") as f:
@@ -131,6 +136,12 @@ def no_pre_commit():
         print(
             f"{WARNING}No pyproject.toml file found. Skipping removing black and isort"
         )
+
+
+def with_pre_commit():
+    # move .pre-commit-config.yaml file to the root of the project
+    shutil.move(".pre-commit-config.yaml", "../.pre-commit-config.yaml")
+    shutil.move(".flake8", "../.flake8")
 
 
 def main():
@@ -149,10 +160,22 @@ def main():
     if "{{cookiecutter.use_bitbucket_pipeline}}" == "n":
         no_bitbucket_pipeline()
         print(f"{SUCCESS}Removed bitbucket-pipelines.yml file")
+    # else :
+    #     with_bitbucket_pipeline()
+    #     print(f"{SUCCESS}Moved bitbucket-pipelines.yml file to the root of the project")
 
     if "{{cookiecutter.use_pre_commit}}" == "n":
         no_pre_commit()
         print(f"{SUCCESS}Removed .pre-commit-config.yaml file")
+    # else:
+    #     with_pre_commit()
+    #     print(f"{SUCCESS}Moved .pre-commit-config.yaml file to the root of the project")
+
+    # rename the project folder to dummy and move all its contents to the root of the project
+    shutil.move("{{cookiecutter.project_slug}}", "dummy")
+    for item in os.listdir("dummy"):
+        shutil.move(f"dummy/{item}", f"{item}")
+    os.rmdir("dummy")
 
 
 if __name__ == "__main__":
