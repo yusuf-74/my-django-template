@@ -126,6 +126,7 @@ def no_pre_commit():
             pyproject = toml.load(f)
             pyproject["tool"]["black"] = None
             pyproject["tool"]["isort"] = None
+            pyproject["tool"] = None
             f.seek(0)
             toml.dump(pyproject, f)
             f.truncate()
