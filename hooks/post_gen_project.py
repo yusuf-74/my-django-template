@@ -35,7 +35,7 @@ def no_docker():
 
 def no_celery():
     # Remove celery.py file
-    shutil.rmtree("{{cookiecutter.project_slug}}/celery.py")
+    os.remove("{{cookiecutter.project_slug}}/celery.py")
     try:
         with open("{{cookiecutter.project_slug}}/__init__.py", "w") as f:
             f.write("")
@@ -118,8 +118,8 @@ def no_bitbucket_pipeline():
 
 def no_pre_commit():
     # Remove .pre-commit-config.yaml file
-    shutil.rmtree(".pre-commit-config.yaml")
-    shutil.rmtree(".flake8")
+    os.remove(".pre-commit-config.yaml")
+    os.remove(".flake8")
     try:
         # remove black and isort from pyproject.toml
         with open("pyproject.toml", "r+") as f:
