@@ -1,0 +1,10 @@
+{
+    "project_name": "My Django Project",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "description": "RESTful APIs with Django REST Framework",
+    "author_name": "Yusuf Ashour",
+    "use_docker": "y",
+    "use_celery": "y",
+    "use_bitbucket_pipelines": "y",
+    "use_pre_commit": "y"
+}

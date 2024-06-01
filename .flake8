@@ -1,0 +1,4 @@
+[flake8]
+exclude = .git,venv,.venv,env,__init__.py
+max-line-length = 120
+ignore = F405,E501,E231,W191,E101,W291,E126,E712,E721,W503,E203,W605
