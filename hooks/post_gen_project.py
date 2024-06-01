@@ -193,7 +193,7 @@ def main():
                 f"{WARNING}Failed to move {item} to {{ cookiecutter.project_slug }}/{item}"
             )
             pass
-    # shutil.rmtree("{{ cookiecutter.project_slug }}")
+    shutil.rmtree("{{ cookiecutter.project_slug }}")
 
 
 if __name__ == "__main__":
