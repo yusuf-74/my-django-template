@@ -11,7 +11,7 @@ services:
     command: >
       sh -c "
         python manage.py collectstatic --noinput --clear &&
-        gunicorn -w 5 -b 0.0.0.0:8000 --timeout 9000 core.wsgi:application
+        gunicorn -w 5 -b 0.0.0.0:8000 --timeout 9000 {{cookiecutter.project_slug}}.wsgi:application
         "
     depends_on:
       - redis.staging
@@ -26,7 +26,7 @@ services:
       - static-vol:/app/staticfiles
     command: > 
       sh -c "
-        celery -A core beat -l info" 
+        celery -A {{cookiecutter.project_slug}} beat -l info" 
     depends_on:
       - django.staging
       - redis.staging
@@ -41,7 +41,7 @@ services:
       - static-vol:/app/staticfiles
     command: >
       sh -c "
-        celery -A core worker -l info
+        celery -A {{cookiecutter.project_slug}} worker -l info
         "
     depends_on:
       - django.staging
@@ -56,7 +56,7 @@ services:
       - .:/app
     command: >
       sh -c "
-        celery -A core flower --port=5555
+        celery -A {{cookiecutter.project_slug}} flower --port=5555
         "
     depends_on:
       - django.staging

@@ -1,0 +1,15 @@
+{% extends 'mails/base.html' %}
+
+{% block content %}
+<div>
+    <!-- greetings first -->
+    Hi {{ first_name }} {{ last_name }},
+    <p>
+        Please verify your email address by clicking the button below.
+    </p>
+    <a href={{ verify_email_url }} class="button">Verify Email</a>
+    <p>
+        If you did not create an account, no further action is required.
+    </p>
+</div>
+{% endblock %}

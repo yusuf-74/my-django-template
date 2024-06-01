@@ -33,14 +33,14 @@ REMOTE_DB = env_config('REMOTE_DB', default=False, cast=bool)
 
 APPEND_SLASH = True
 ALLOWED_HOSTS = env_config('ALLOWED_HOSTS', default='*', cast=lambda hosts: [host.strip() for host in hosts.split(',')])
-CORS_ALLOWED_ORIGINS = env_config(
-    'CORS_ALLOWED_ORIGINS', default='localhost', cast=lambda origins: [origin.strip() for origin in origins.split(',')]
-)
-CSRF_TRUSTED_ORIGINS = env_config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost',
-    cast=lambda origins: [origin.strip() for origin in origins.split(',')],
-)
+# CORS_ALLOWED_ORIGINS = env_config(
+#     'CORS_ALLOWED_ORIGINS', default='localhost', cast=lambda origins: [origin.strip() for origin in origins.split(',')]
+# )
+# CSRF_TRUSTED_ORIGINS = env_config(
+#     'CSRF_TRUSTED_ORIGINS',
+#     default='http://localhost',
+#     cast=lambda origins: [origin.strip() for origin in origins.split(',')],
+# )
 
 # Application definition
 

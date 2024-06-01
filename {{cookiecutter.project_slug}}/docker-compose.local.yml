@@ -18,11 +18,9 @@ services:
       - static-vol:/app/staticfiles
     command: >
       sh -c "
-        python ./db_conf/wait_for_it.py &&
-        # python manage.py makemigrations &&
-        # python ./db_conf/initiate_db.py &&
-        # python ./db_conf/create_views.py &&
-        # python ./db_conf/data_migrator.py && 
+        python ./wait_for_it.py &&
+        python manage.py makemigrations &&
+        python manage.py migrate &&
         python manage.py collectstatic --noinput --clear &&
         python manage.py runserver 0.0.0.0:8000
         "
@@ -42,8 +40,8 @@ services:
       - static-vol:/app/staticfiles
     command: > 
       sh -c "
-        python ./db_conf/wait_for_it.py &&
-        celery -A core beat -l info" 
+        python ./wait_for_it.py &&
+        celery -A {{cookiecutter.project_slug}} beat -l info" 
     depends_on:
       - django.local
       - redis.local
@@ -58,8 +56,8 @@ services:
       - static-vol:/app/staticfiles
     command: >
       sh -c "
-        python ./db_conf/wait_for_it.py &&
-        celery -A core worker -l info
+        python ./wait_for_it.py &&
+        celery -A {{cookiecutter.project_slug}} worker -l info
         "
     depends_on:
       - django.local
@@ -74,8 +72,8 @@ services:
       - .:/app
     command: >
       sh -c "
-        python ./db_conf/wait_for_it.py &&
-        celery -A core flower --port=5555 --basic_auth=$CELERY_FLOWER_USER:$CELERY_FLOWER_PASSWORD
+        python ./wait_for_it.py &&
+        celery -A {{cookiecutter.project_slug}} flower --port=5555 --basic_auth=$CELERY_FLOWER_USER:$CELERY_FLOWER_PASSWORD
         "
     ports:
       - "5555:5555"

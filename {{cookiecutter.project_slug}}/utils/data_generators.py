@@ -14,3 +14,7 @@ def generate_password():
     for _ in range(12):
         password.append(random.choice(all_chars))
     return ''.join(password)
+
+
+def generate_otp():
+    return random.randint(100000, 999999)
