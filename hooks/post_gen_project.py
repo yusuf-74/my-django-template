@@ -68,7 +68,9 @@ def no_celery():
                 and "flower" not in service
             ):
                 new_services["services"][service] = docker_compose["services"][service]
-
+        new_services["version"] = docker_compose["version"]
+        new_services["networks"] = docker_compose.get("networks")
+        new_services["volumes"] = docker_compose.get("volumes")
         with open(docker_compose_file, "w") as f:
             yaml.safe_dump(new_services, f)
     try:
@@ -106,6 +108,9 @@ def no_nginx():
         for service in docker_compose["services"]:
             if "nginx" not in service:
                 new_services["services"][service] = docker_compose["services"][service]
+        new_services["version"] = docker_compose["version"]
+        new_services["networks"] = docker_compose.get("networks")
+        new_services["volumes"] = docker_compose.get("volumes")
 
         with open(docker_compose_file, "w") as f:
             yaml.safe_dump(new_services, f)
