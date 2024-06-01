@@ -1,0 +1,20 @@
+image: python:3.12.0-slim
+
+definitions:
+  services:
+    test-db:
+      image: postgres:latest
+      environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+
+pipelines:
+  branches:
+    production:
+      - step:
+          name: Test
+          caches:
+            - pip
+          script:
+            - echo "Testing the code..."

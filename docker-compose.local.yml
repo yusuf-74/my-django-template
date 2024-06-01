@@ -1,0 +1,109 @@
+version: '3'
+
+services:
+  db.local:
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file: ./env_files/local.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  django.local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: >
+      sh -c "
+        python ./db_conf/wait_for_it.py &&
+        # python manage.py makemigrations &&
+        # python ./db_conf/initiate_db.py &&
+        # python ./db_conf/create_views.py &&
+        # python ./db_conf/data_migrator.py && 
+        python manage.py collectstatic --noinput --clear &&
+        python manage.py runserver 0.0.0.0:8000
+        "
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db.local
+      - redis.local
+    env_file: ./env_files/local.env
+
+  beat.local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: > 
+      sh -c "
+        python ./db_conf/wait_for_it.py &&
+        celery -A core beat -l info" 
+    depends_on:
+      - django.local
+      - redis.local
+    env_file: ./env_files/local.env
+
+  worker.local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: >
+      sh -c "
+        python ./db_conf/wait_for_it.py &&
+        celery -A core worker -l info
+        "
+    depends_on:
+      - django.local
+      - redis.local
+    env_file: ./env_files/local.env
+
+  flower.local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+        python ./db_conf/wait_for_it.py &&
+        celery -A core flower --port=5555 --basic_auth=$CELERY_FLOWER_USER:$CELERY_FLOWER_PASSWORD
+        "
+    ports:
+      - "5555:5555"
+    depends_on:
+      - django.local
+      - redis.local
+      - worker.local
+    env_file: ./env_files/local.env
+
+  redis.local:
+    image: redis
+    entrypoint: ["sh", "-c", "redis-server --save '' --appendonly no & sleep 5 && redis-cli -h localhost FLUSHDB && redis-cli -h localhost FLUSHALL && tail -f /dev/null"]
+    restart: always 
+
+  nginx.local:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.local.conf:/etc/nginx/nginx.conf
+      - ./nginx/creds.htpasswd:/etc/nginx/.htpasswd
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - django.local
+      - flower.local
+
+volumes:
+  postgres_data: {}
+  static-vol: {}
+  flower-data: {}

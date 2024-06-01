@@ -1,0 +1,101 @@
+version: '3'
+
+services:
+  django.production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: >
+      sh -c "
+        python manage.py collectstatic --noinput --clear &&
+        gunicorn -w 5 -b 0.0.0.0:8000 --timeout 9000 core.wsgi:application
+        "
+    depends_on:
+      - redis.production
+    env_file: ./env_files/production.env
+
+  beat.production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: > 
+      sh -c "
+        celery -A core beat -l info" 
+    depends_on:
+      - django.production
+      - redis.production
+    env_file: ./env_files/production.env
+
+  worker.production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - static-vol:/app/staticfiles
+    command: >
+      sh -c "
+        celery -A core worker -l info
+        "
+    depends_on:
+      - django.production
+      - redis.production
+    env_file: ./env_files/production.env
+
+  flower.production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+        celery -A core flower --port=5555
+        "
+    depends_on:
+      - django.production
+      - redis.production
+    env_file: ./env_files/production.env
+
+  redis.production:
+    image: redis
+    entrypoint: ["sh", "-c", "redis-server --save '' --appendonly no & sleep 5 && redis-cli -h localhost FLUSHDB && redis-cli -h localhost FLUSHALL && tail -f /dev/null"]
+    restart: always 
+  
+  nginx.production:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.production.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./nginx/creds.htpasswd:/etc/nginx/.htpasswd
+      
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - django.production
+      - flower.production
+  
+  # certbot.production:
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #   command: certonly --webroot -w /var/www/certbot --force-renewal --email ur_email -d ur_domain_name --agree-tos
+  #   env_file:
+  #     - ./env_files/production.env
+  #   depends_on:
+  #     - nginx.production
+
+volumes:
+  postgres_data: {}
+  static-vol: {}
+  flower-data: {}
